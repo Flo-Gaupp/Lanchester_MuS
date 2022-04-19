@@ -51,7 +51,7 @@ class LanchesterAnimationPanel extends JPanel {
 
 	int width = _0_Constants.WINDOW_WIDTH;
 	int height = _0_Constants.WINDOW_HEIGHT;
-	Populations test = new Populations (100000,100000,0.07,0.05);
+	Populations test = new Populations (100000,100000,0.05,0.07);
 	int diameter = 30;
 	int startGx = 100;
 	int startGy = 200;
@@ -104,9 +104,11 @@ class LanchesterAnimationPanel extends JPanel {
 			hColumnPosition -= (diameter+5);
 		}
 		
+		test.prognosis();
 		
 		g.setColor(Color.BLACK);
 		g.drawString("Erwartung durch Rechnung: ", 20, 20);
+		g.drawString("Ein Kreis entspricht: " + unitsPerCircle + " Einheiten", width-300, 900);
 		
 		if (test.winner == "G") {
 			g.setColor(Color.RED);
@@ -114,18 +116,20 @@ class LanchesterAnimationPanel extends JPanel {
 		else if (test.winner == "H") {
 			g.setColor(Color.BLUE);
 		}
-		g.drawString(test.prognosis(), 20, 40);
+		g.drawString(test.result + "        Endpopulation: " + test.endPopulation + "        Gefechtszeit: " + test.fightTime + "s", 20, 40);
+		
+		g.setColor(Color.BLACK);
+		g.drawString("Time: "+time + "s", 20, 70);
 		
 		g.setColor(Color.RED);
-		g.drawString("Aktuelle Population G: "+Math.round(gStatus), 20, 70);
+		g.drawString("Aktuelle Population G: "+Math.round(gStatus), 20, 90);
 		g.setColor(Color.BLUE);
-		g.drawString("Aktuelle Population H: "+Math.round(hStatus), 20, 90);
-
+		g.drawString("Aktuelle Population H: "+Math.round(hStatus), 20, 110);
 		
 		
 		if (gStatus<=0.5 || hStatus<=0.5) {
 			t.endThread();
-			System.out.println(test.prognosis());
+			System.out.println(test.result);
 		} 
 		
 		
