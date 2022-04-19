@@ -10,7 +10,7 @@ public class Main {
 //		animation = new _2_SmootherAnimationSeveralWindows();
 //		animation = new _3_MultipleCirclesAnimation();
 //		animation = new _4_TemporalFunctionDemo();
-		animation = new _5_ClockAnimation();
+//		animation = new _5_ClockAnimation();
 //		animation = new _6_YourOwnAnimation();
 		animation.start();
 	}
