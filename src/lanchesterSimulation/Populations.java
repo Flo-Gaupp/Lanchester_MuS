@@ -20,6 +20,7 @@ public class Populations {
 		this.s = s;
 		this.r = r;
 		this.k = Math.sqrt(r*s);
+		prognosis();
 	}
 	
 	
@@ -78,15 +79,15 @@ public class Populations {
 			endPopulation = (int) Math.floor(Math.sqrt(l()/s));
 			fightTime = ((1/k) * arctanh((hStart/gStart) * (k/s)));
 			fightTime = fightTime * 1000;
-			fightTime = (Math.round(fightTime));
-			fightTime = fightTime /1000;
+			fightTime = Math.round(fightTime);
+			fightTime = fightTime/1000;
 		}
 		else if (winner == "H") {
 			endPopulation = (int) Math.floor(Math.sqrt((-l())/r));
 			fightTime = ((1/k) * arctanh((gStart/hStart) * (k/r)));
 			fightTime = fightTime * 1000;
-			fightTime = (Math.round(fightTime));
-			fightTime = fightTime / 1000;
+			fightTime = Math.round(fightTime);
+			fightTime = fightTime/1000;
 		}
 		else {
 			endPopulation = 0;

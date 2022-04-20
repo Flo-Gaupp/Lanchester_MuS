@@ -1,7 +1,7 @@
 package app;
 
 public class _0_Constants {
-	public static int WINDOW_WIDTH = 1000;
+	public static int WINDOW_WIDTH = 1500;
 	public static int WINDOW_HEIGHT = 1000;
 	
 	public static int FPS = 60;

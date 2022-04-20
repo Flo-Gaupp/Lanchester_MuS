@@ -51,13 +51,14 @@ class LanchesterAnimationPanel extends JPanel {
 
 	int width = _0_Constants.WINDOW_WIDTH;
 	int height = _0_Constants.WINDOW_HEIGHT;
-	Populations test = new Populations (100000,100000,0.05,0.07);
+	Populations test = new Populations (100000,100000,0.08,0.06);
 	int diameter = 30;
 	int startGx = 100;
 	int startGy = 200;
-	int startHx = width-100-diameter;
+	int startHx = 850-diameter;
 	int startHy = 200;
 	int unitsPerCircle = test.unitsPerCircle(); 
+
 	
 
 	// drawing operations should be done in this method
@@ -104,27 +105,7 @@ class LanchesterAnimationPanel extends JPanel {
 			hColumnPosition -= (diameter+5);
 		}
 		
-		test.prognosis();
-		
-		g.setColor(Color.BLACK);
-		g.drawString("Erwartung durch Rechnung: ", 20, 20);
-		g.drawString("Ein Kreis entspricht: " + unitsPerCircle + " Einheiten", width-300, 900);
-		
-		if (test.winner == "G") {
-			g.setColor(Color.RED);
-		}
-		else if (test.winner == "H") {
-			g.setColor(Color.BLUE);
-		}
-		g.drawString(test.result + "        Endpopulation: " + test.endPopulation + "        Gefechtszeit: " + test.fightTime + "s", 20, 40);
-		
-		g.setColor(Color.BLACK);
-		g.drawString("Time: "+time + "s", 20, 70);
-		
-		g.setColor(Color.RED);
-		g.drawString("Aktuelle Population G: "+Math.round(gStatus), 20, 90);
-		g.setColor(Color.BLUE);
-		g.drawString("Aktuelle Population H: "+Math.round(hStatus), 20, 110);
+		test.prognosis();		
 		
 		
 		if (gStatus<=0.5 || hStatus<=0.5) {
@@ -132,9 +113,119 @@ class LanchesterAnimationPanel extends JPanel {
 			System.out.println(test.result);
 		} 
 		
+		generateGraph (g,gStatus,hStatus);
+		label (g,gStatus,hStatus);
+		
+	}
+		
+		protected void label (Graphics g, double gStatus, double hStatus) {
+			
+			g.setColor(Color.BLACK);
+			g.drawString("Erwartung durch Rechnung: ", 20, 20);
+			g.drawString("Ein Kreis entspricht: " + unitsPerCircle + " Einheiten", 650, 950);
+			
+			if (test.winner == "G") {
+				g.setColor(Color.RED);
+			}
+			else if (test.winner == "H") {
+				g.setColor(Color.BLUE);
+			}
+			g.drawString(test.result + "        Endpopulation: " + test.endPopulation + "        Gefechtszeit: " + test.fightTime + "s", 20, 40);
+			
+			g.setColor(Color.BLACK);
+			g.drawString("Time: "+time + "s", 20, 70);
+			
+			g.setColor(Color.RED);
+			g.drawString("Aktuelle Population G: "+Math.round(gStatus), 20, 90);
+			g.setColor(Color.BLUE);
+			g.drawString("Aktuelle Population H: "+Math.round(hStatus), 20, 110);
+			
+			g.setColor(Color.RED);
+			g.drawString("Startpopulation: " + Math.round(test.gStart) + "    s = " + test.s, startGx, startGy-15);
+			g.setColor(Color.BLUE);
+			g.drawString("Startpopulation: " + Math.round(test.hStart) + "    r = " + test.r, startHx-(9*diameter+45), startHy-15);
+
+
+		}
 		
 		
-		
+		protected void generateGraph (Graphics g, double gStatus, double hStatus) {
+			int ursprungX = 1010;
+			int ursprungY = 700;
+			int endX = ursprungX+440;
+			int endY = ursprungY-500;
+			int xLength = endX-ursprungX;
+			int yLength = ursprungY-endY;
+			
+			//Koordinatensystem
+			g.setColor(Color.black);
+			g.drawLine(ursprungX, ursprungY, ursprungX, endY);
+			g.drawLine(ursprungX, ursprungY, endX, ursprungY);
+			g.drawLine(endX, ursprungY, endX-5, ursprungY-3);
+			g.drawLine(endX, ursprungY, endX-5, ursprungY+3);
+			g.drawLine(ursprungX, endY, ursprungX-3, endY+5);
+			g.drawLine(ursprungX, endY, ursprungX+3, endY+5);
+			g.drawString("time", endX+10, ursprungY);
+			g.drawString("Population", ursprungX-30, endY-20);
+			
+			for (int i = 1; i<20; i++) {
+				g.drawLine(ursprungX+i*(xLength/20), ursprungY+3, ursprungX+i*(xLength/20), ursprungY-3);
+			}
+			for (int i = 1; i<20; i++) {
+				g.drawLine(ursprungX-3, ursprungY-i*(yLength/20), ursprungX+3, ursprungY-i*(yLength/20));
+			}
+			
+			//Beschriftung Koordinatensystem
+			
+			double scaleTimeLabel = (test.fightTime+2)/20;
+			double scalePopulationLabel;
+			double scaleTimeDrawing = (test.fightTime+2)/xLength;
+			double scalePopulationDrawing;
+			
+			if (test.gStart>test.hStart) {
+				scalePopulationLabel = test.gStart/20;
+				scalePopulationDrawing = test.gStart/yLength;
+			}
+			else {
+				scalePopulationLabel = test.hStart/20;
+				scalePopulationDrawing = test.hStart/yLength;
+			}
+			
+			for (int i = 1; i<21; i++) {
+				int label = (int) Math.round(scalePopulationLabel*i);
+				g.drawString(""+label, ursprungX-60, ursprungY-i*(yLength/20)+5);
+			}
+			for (int i = 1; i<21; i++) {
+				int label = (int)Math.round(scaleTimeLabel*i);
+				g.drawString(""+label, (ursprungX+i*(xLength/20))-6, ursprungY+20);
+			}
+			
+			//Graph
+			
+			int [] graphGy = new int [yLength];
+			int [] graphHy = new int [yLength];
+			
+			for (int i = 0; i<xLength; i++) {
+				graphGy [i] = (int) Math.floor(test.gStatus(i*scaleTimeDrawing));
+				graphHy [i] = (int) Math.floor(test.hStatus(i*scaleTimeDrawing));
+				
+				if (i<=time/scaleTimeDrawing) {
+					g.setColor(Color.RED);
+					g.fillOval(ursprungX+i-1,(int) (ursprungY-Math.round(graphGy[i]/scalePopulationDrawing)-1), 3, 3);
+					g.setColor(Color.BLUE);
+					g.fillOval(ursprungX+i-1,(int) (ursprungY-Math.round(graphHy[i]/scalePopulationDrawing)-1), 3, 3);
+				}
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		}
 
 
 		/**
@@ -194,5 +285,5 @@ class LanchesterAnimationPanel extends JPanel {
 		 * 
 		 */
 
-	}
+	
 }
