@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 
+import lanchesterSimulation.Animation;
 import utils.ApplicationTime;
 
 public class _5_ClockAnimation extends Animation {

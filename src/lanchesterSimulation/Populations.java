@@ -19,8 +19,12 @@ public class Populations {
 		this.hStart = hStart;
 		this.s = s;
 		this.r = r;
-		this.k = Math.sqrt(r*s);
+		calcK();
 		prognosis();
+	}
+	
+	public void calcK () {
+		this.k = Math.sqrt(r*s);
 	}
 	
 	

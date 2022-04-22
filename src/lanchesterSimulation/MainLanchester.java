@@ -8,7 +8,7 @@ public class MainLanchester {
 		Animation animation = null; 
 		
 		
-		animation = new LanchesterAnimation();
+		animation = new LanchesterAnimation ();
 		animation.start();
 	}
 

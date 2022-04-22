@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import lanchesterSimulation.Animation;
 import utils.ApplicationTime;
 
 public class _3_MultipleCirclesAnimation extends Animation {

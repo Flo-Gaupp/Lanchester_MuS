@@ -1,14 +1,16 @@
-package app;
+package lanchesterSimulation;
 
 import java.util.ArrayList;
 import java.util.Timer;
 
 import javax.swing.JFrame;
 
+import app._0_Constants;
 import utils.ApplicationTime;
 import utils.FrameUpdater;
 
 public abstract class Animation {
+	
 
 	public void start() {
 		// open new thread for time measurement
