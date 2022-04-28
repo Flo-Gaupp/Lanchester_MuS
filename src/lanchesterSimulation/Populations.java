@@ -56,54 +56,101 @@ public class Populations {
 	
 	public void prognosis () {
 		double l = l();
+		calcK();
 		if (l>0) {
 			result = "G gewinnt (rot)";
 			winner = "G";
-		}
-		else if (l<0) {
-			result = "H gewinnt (blau)";
-			winner = "H";
-		}
-		else if (l==0) {
-			if (gStart==hStart && r==s) {
-				result = "tragisches Unentschieden";
-				winner = "X";
-			}
-			else if (gStart>hStart) {
-				result = "Pyrrhussieg für G";
-				winner = "G";
-			}
-			else if (gStart<hStart) {
-				result = "Pyrrhussieg für H";
-				winner = "H";
-			}
-			
-		}
-		if (winner == "G") {
-			endPopulation = (int) Math.floor(Math.sqrt(l()/s));
 			fightTime = ((1/k) * arctanh((hStart/gStart) * (k/s)));
 			fightTime = fightTime * 1000;
 			fightTime = Math.round(fightTime);
 			fightTime = fightTime/1000;
 		}
-		else if (winner == "H") {
-			endPopulation = (int) Math.floor(Math.sqrt((-l())/r));
+		else if (l<0) {
+			result = "H gewinnt (blau)";
+			winner = "H";
 			fightTime = ((1/k) * arctanh((gStart/hStart) * (k/r)));
 			fightTime = fightTime * 1000;
 			fightTime = Math.round(fightTime);
 			fightTime = fightTime/1000;
+		}
+		else if (l==0) {
+			if (gStart==hStart && r==s) {
+				result = "tragisches Unentschieden";
+				winner = "X";
+				fightTime = estimateEndOfFight(1, 0);
+				fightTime = fightTime * 1000;
+				fightTime = Math.round(fightTime);
+				fightTime = fightTime/1000;
+			}
+			else if (gStart>hStart) {
+				result = "Pyrrhussieg für G";
+				winner = "G";
+				fightTime = estimateEndOfFight(1, 0);
+				fightTime = fightTime * 1000;
+				fightTime = Math.round(fightTime);
+				fightTime = fightTime/1000;
+			}
+			else if (gStart<hStart) {
+				result = "Pyrrhussieg für H";
+				winner = "H";
+				fightTime = estimateEndOfFight(1, 0);
+				fightTime = fightTime * 1000;
+				fightTime = Math.round(fightTime);
+				fightTime = fightTime/1000;
+			}
+			
+		}
+		if (winner == "G") {
+			endPopulation = (int) Math.floor(Math.sqrt(l()/s));
+		}
+		else if (winner == "H") {
+			endPopulation = (int) Math.floor(Math.sqrt((-l())/r));
 		}
 		else {
 			endPopulation = 0;
 		}
 	}
 	
-	public int unitsPerCircle () {
-		if (gStart>hStart) {
-			return ((int) Math.round(gStart / 200));
+	
+	//estimates the FightTime until the manpower is smaller than 0.5
+	public double estimateEndOfFight(double i, double t) {
+		double p = gStart;
+		while (p>0.5) {
+			t+=i;
+			if (winner == "G") {
+				p=gStatus(t);
+			}
+			else {
+				p=hStatus(t);
+			}
+		}
+		if(i<1) {
+			return t-i;
 		}
 		else {
+			t=t-i;
+			i= i/10;
+			return estimateEndOfFight(i,t);
+		}
+		
+	}
+	
+	public int unitsPerCircle () {
+		if (gStart>hStart) {
+			if (gStart>200) {
+			return ((int) Math.round(gStart / 200));
+			}
+			else {
+				return 1;
+			}
+		}
+		else {
+			if (hStart>200) {
 			return ((int) Math.round(hStart / 200));
+			}
+			else {
+				return 1;
+			}
 		}
 	}
 	

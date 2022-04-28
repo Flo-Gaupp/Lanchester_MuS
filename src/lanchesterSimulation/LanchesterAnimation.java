@@ -34,7 +34,10 @@ public class LanchesterAnimation extends Animation {
 		/**
 		 * Create Frame
 		 */
-		this.szenario = new Populations (90000,100000,0.08,0.06);
+		this.szenario = new Populations (90000,100000,0.08,0.06);		//klarer Sieg
+	//	this.szenario = new Populations (10000, 5000, 0.01, 0.04);		//Pyrrhussieg für G
+	//	this.szenario = new Populations (5000, 10000, 0.04, 0.01);		//Pyrrhussieg für H
+	//	this.szenario = new Populations (10000, 10000, 0.1, 0.1);   	//tragisches Unentschieden
 		JFrame frame = new JFrame("Mathematik und Simulation");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new LanchesterAnimationPanel(applicationTimeThread, szenario);
@@ -166,25 +169,21 @@ class ControlInputFields implements ActionListener {
 			applicationTimeThread.pauseTime();
 			applicationTimeThread.timeSinceStart = 0;
 			szenario.prognosis();
-			szenario.calcK();
 		} else if (name == "populationH") {
 			applicationTimeThread.pauseTime();
 			applicationTimeThread.timeSinceStart = 0;
 			szenario.hStart=Double.parseDouble(input.getText()) ;
 			szenario.prognosis();
-			szenario.calcK();
 		} else if (name == "strengthG") {
 			applicationTimeThread.pauseTime();
 			applicationTimeThread.timeSinceStart = 0;
 			szenario.s=Double.parseDouble(input.getText()) ;
 			szenario.prognosis();
-			szenario.calcK();
 		} else if (name == "strengthH") {
 			applicationTimeThread.pauseTime();
 			applicationTimeThread.timeSinceStart = 0;
 			szenario.r=Double.parseDouble(input.getText()) ;
 			szenario.prognosis();
-			szenario.calcK();
 		}
 	}
 	
@@ -418,8 +417,23 @@ class LanchesterAnimationPanel extends JPanel {
 			}
 			//x-axis
 			for (int i = 1; i<21; i++) {
+				
+				//If estimated fightTime is smaller than 20
+				if (szenario.fightTime<20) {
+					double label = scaleTimeLabel*i;
+					label = label*10;
+					label = Math.round(label);
+					label = label/10;
+					if (i%2==0) {
+					g.drawString(""+label, (ursprungX+i*(xLength/20))-12, ursprungY+20);
+					}
+				}
+				//normal case
+				else {
 				int label = (int)Math.round(scaleTimeLabel*i);
 				g.drawString(""+label, (ursprungX+i*(xLength/20))-6, ursprungY+20);
+				}
+				
 			}
 			
 			
@@ -428,8 +442,8 @@ class LanchesterAnimationPanel extends JPanel {
 			 * Draw the functions
 			 */
 			
-			int [] graphGy = new int [yLength];
-			int [] graphHy = new int [yLength];
+			int [] graphGy = new int [xLength];
+			int [] graphHy = new int [xLength];
 			
 			//calculate the values for each x-value of the function
 			for (int i = 0; i<xLength; i++) {
