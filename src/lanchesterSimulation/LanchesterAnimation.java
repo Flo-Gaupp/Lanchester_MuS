@@ -34,10 +34,10 @@ public class LanchesterAnimation extends Animation {
 		/**
 		 * Create Frame
 		 */
-	//	this.szenario = new Populations (90000,100000,0.08,0.06);		//klarer Sieg
+		this.szenario = new Populations (90000,100000,0.08,0.06);		//klarer Sieg
 	//	this.szenario = new Populations (10000, 5000, 0.2, 0.8);		//Pyrrhussieg für G
 	//	this.szenario = new Populations (5000, 10000, 1, 0.25);		//Pyrrhussieg für H
-		this.szenario = new Populations (10000, 10000, 1, 1);   	//tragisches Unentschieden
+	//	this.szenario = new Populations (10000, 10000, 1, 1);   	//tragisches Unentschieden
 		JFrame frame = new JFrame("Mathematik und Simulation");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new LanchesterAnimationPanel(applicationTimeThread, szenario);
@@ -265,22 +265,27 @@ class LanchesterAnimationPanel extends JPanel {
 		double hStatus = szenario.hStatus(time);
 		
 		//Calculate how many Circles need to be drawn
-		int gCircles =  (int) Math.round(gStatus / szenario.unitsPerCircle());
-		int hCircles = (int) Math.round(hStatus / szenario.unitsPerCircle());
-		
-		
+		int gCircles =  (int) Math.floor(gStatus / szenario.unitsPerCircle());
+		int hCircles = (int) Math.floor(hStatus / szenario.unitsPerCircle());
+		int gDiameterLastCircle =(int) (((gStatus%szenario.unitsPerCircle())/(szenario.unitsPerCircle()))*diameter);
+		int hDiameterLastCircle =(int) (((hStatus%szenario.unitsPerCircle())/(szenario.unitsPerCircle()))*diameter);
 		//Draw RED Circles
 		int gColumnPosition = startGx;
 		int gRowPosition = startGy;
 		
 		g.setColor(Color.RED);
-		for (int i = 0; i < gCircles; i++) {
+		for (int i = 0; i <= gCircles; i++) {
 			if (i!=0 && ((i+1)%10) == 1) {
 				gRowPosition += diameter+5;
 				gColumnPosition = startGx;
 			}
+			if (i<gCircles) {
 			g.fillOval(gColumnPosition, gRowPosition, diameter, diameter);
 			gColumnPosition += diameter+5;
+			}
+			else {
+				g.fillOval(gColumnPosition, gRowPosition, gDiameterLastCircle, gDiameterLastCircle);
+			}
 		}
 		
 		
@@ -289,13 +294,19 @@ class LanchesterAnimationPanel extends JPanel {
 		int hRowPosition = startHy;
 		
 		g.setColor(Color.BLUE);
-		for (int i = 0; i < hCircles; i++) {
+		for (int i = 0; i <= hCircles; i++) {
 			if (i!=0 && ((i+1)%10) == 1) {
 				hRowPosition += diameter+5;
 				hColumnPosition = startHx;
 			}
+			if (i<hCircles) {
 			g.fillOval(hColumnPosition, hRowPosition, diameter, diameter);
 			hColumnPosition -= (diameter+5);
+			}
+			else {
+				g.fillOval(hColumnPosition, hRowPosition, hDiameterLastCircle, hDiameterLastCircle);
+
+			}
 		}
 			
 		
