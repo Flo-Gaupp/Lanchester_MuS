@@ -118,14 +118,14 @@ public class Populations {
 		while (p>0.5) {
 			t+=i;
 			if (winner == "G") {
-				p=gStatus(t);
-			}
-			else {
 				p=hStatus(t);
 			}
+			else {
+				p=gStatus(t);
+			}
 		}
-		if(i<1) {
-			return t-i;
+		if(i<0.001) {
+			return t;
 		}
 		else {
 			t=t-i;

@@ -34,10 +34,10 @@ public class LanchesterAnimation extends Animation {
 		/**
 		 * Create Frame
 		 */
-		this.szenario = new Populations (90000,100000,0.08,0.06);		//klarer Sieg
-	//	this.szenario = new Populations (10000, 5000, 0.01, 0.04);		//Pyrrhussieg für G
-	//	this.szenario = new Populations (5000, 10000, 0.04, 0.01);		//Pyrrhussieg für H
-	//	this.szenario = new Populations (10000, 10000, 0.1, 0.1);   	//tragisches Unentschieden
+	//	this.szenario = new Populations (90000,100000,0.08,0.06);		//klarer Sieg
+	//	this.szenario = new Populations (10000, 5000, 0.2, 0.8);		//Pyrrhussieg für G
+	//	this.szenario = new Populations (5000, 10000, 1, 0.25);		//Pyrrhussieg für H
+		this.szenario = new Populations (10000, 10000, 1, 1);   	//tragisches Unentschieden
 		JFrame frame = new JFrame("Mathematik und Simulation");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new LanchesterAnimationPanel(applicationTimeThread, szenario);
@@ -267,7 +267,7 @@ class LanchesterAnimationPanel extends JPanel {
 		//Calculate how many Circles need to be drawn
 		int gCircles =  (int) Math.round(gStatus / szenario.unitsPerCircle());
 		int hCircles = (int) Math.round(hStatus / szenario.unitsPerCircle());
-
+		
 		
 		//Draw RED Circles
 		int gColumnPosition = startGx;
@@ -375,7 +375,7 @@ class LanchesterAnimationPanel extends JPanel {
 			g.drawLine(ursprungX, endY, ursprungX+3, endY+5);
 			
 			//Labeling the axis
-			g.drawString("time", endX+10, ursprungY);
+			g.drawString("time(s)", endX, ursprungY-10);
 			g.drawString("Population", ursprungX-30, endY-20);
 			
 			
@@ -419,23 +419,21 @@ class LanchesterAnimationPanel extends JPanel {
 			for (int i = 1; i<21; i++) {
 				
 				//If estimated fightTime is smaller than 20
-				if (szenario.fightTime<20) {
 					double label = scaleTimeLabel*i;
 					label = label*10;
 					label = Math.round(label);
 					label = label/10;
 					if (i%2==0) {
 					g.drawString(""+label, (ursprungX+i*(xLength/20))-12, ursprungY+20);
-					}
 				}
 				//normal case
-				else {
+		/*		else {
 				int label = (int)Math.round(scaleTimeLabel*i);
 				g.drawString(""+label, (ursprungX+i*(xLength/20))-6, ursprungY+20);
 				}
+		*/
 				
 			}
-			
 			
 			
 			/*
