@@ -5,7 +5,6 @@ import java.util.Timer;
 
 import javax.swing.JFrame;
 
-import app._0_Constants;
 import utils.ApplicationTime;
 import utils.FrameUpdater;
 

@@ -10,7 +10,7 @@ public class Populations {
 	public double k;
 	public String winner = "";
 	public String result = "";
-	public int endPopulation;
+	public double endPopulation;
 	public double fightTime;
 	
 	
@@ -61,53 +61,51 @@ public class Populations {
 			result = "G gewinnt (rot)";
 			winner = "G";
 			fightTime = ((1/k) * arctanh((hStart/gStart) * (k/s)));
-			fightTime = fightTime * 1000;
-			fightTime = Math.round(fightTime);
-			fightTime = fightTime/1000;
+			fightTime = Math.round(fightTime*1000)/1000.0;
 		}
 		else if (l<0) {
 			result = "H gewinnt (blau)";
 			winner = "H";
 			fightTime = ((1/k) * arctanh((gStart/hStart) * (k/r)));
-			fightTime = fightTime * 1000;
-			fightTime = Math.round(fightTime);
-			fightTime = fightTime/1000;
+			fightTime = Math.round(fightTime*1000)/1000.0;
 		}
 		else if (l==0) {
 			if (gStart==hStart && r==s) {
 				result = "tragisches Unentschieden";
 				winner = "X";
-				fightTime = estimateEndOfFight(1, 0);
-				fightTime = fightTime * 1000;
-				fightTime = Math.round(fightTime);
-				fightTime = fightTime/1000;
+				fightTime = Math.log(0.5/gStart)/(-k);
+				fightTime = Math.round(fightTime*1000)/1000.0;
+
 			}
 			else if (gStart>hStart) {
 				result = "Pyrrhussieg für G";
 				winner = "G";
-				fightTime = estimateEndOfFight(1, 0);
-				fightTime = fightTime * 1000;
-				fightTime = Math.round(fightTime);
-				fightTime = fightTime/1000;
+				fightTime = Math.log(0.5/hStart)/(-k);
+				fightTime = Math.round(fightTime*1000)/1000.0;
+
 			}
 			else if (gStart<hStart) {
 				result = "Pyrrhussieg für H";
 				winner = "H";
-				fightTime = estimateEndOfFight(1, 0);
-				fightTime = fightTime * 1000;
-				fightTime = Math.round(fightTime);
-				fightTime = fightTime/1000;
+				fightTime = Math.log(0.5/gStart)/(-k);
+				fightTime = Math.round(fightTime*1000)/1000.0;
+
 			}
 			
 		}
 		if (winner == "G") {
-			endPopulation = (int) Math.floor(Math.sqrt(l()/s));
+			//endPopulation =  Math.sqrt(l()/s);
+			endPopulation = gStatus(fightTime);
+			endPopulation = Math.round(endPopulation*10)/10.0;
 		}
 		else if (winner == "H") {
-			endPopulation = (int) Math.floor(Math.sqrt((-l())/r));
+			//endPopulation =  Math.sqrt((-l())/r);
+			endPopulation = hStatus(fightTime);
+			endPopulation = Math.round(endPopulation*10)/10.0;
 		}
 		else {
-			endPopulation = 0;
+			endPopulation = hStatus(fightTime);
+			endPopulation = Math.round(endPopulation*10)/10.0;
 		}
 	}
 	
@@ -157,5 +155,6 @@ public class Populations {
 	private double arctanh (double x) {
 		 return (0.5*Math.log((1+x)/(1-x)));
 	}
+	
 	
 }

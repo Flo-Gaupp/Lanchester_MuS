@@ -1,7 +1,8 @@
 package utils;
 
-import app._0_Constants;
 import java.util.concurrent.atomic.*;
+
+import lanchesterSimulation._0_Constants;
 
 public class ApplicationTime extends Thread {
 	//time in ms

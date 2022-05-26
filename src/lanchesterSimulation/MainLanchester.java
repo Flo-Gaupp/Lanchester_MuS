@@ -1,6 +1,6 @@
 package lanchesterSimulation;
 
-import app.*;
+
 
 public class MainLanchester {
 	
