@@ -34,10 +34,10 @@ public class LanchesterAnimation extends Animation {
 		/**
 		 * Create Frame
 		 */
-	//	this.szenario = new Populations (90000,100000,0.08,0.06);		//klarer Sieg für G
+		this.szenario = new Populations (90000,100000,0.08,0.06);		//klarer Sieg für G
 	//	this.szenario = new Populations (90000,100000,0.06,0.08);		//klarer Sieg für H
 	//	this.szenario = new Populations (10000, 5000, 0.2, 0.8);		//Pyrrhussieg für G
-		this.szenario = new Populations (5000, 10000, 1, 0.25);		//Pyrrhussieg für H
+	//	this.szenario = new Populations (5000, 10000, 1, 0.25);		//Pyrrhussieg für H
 	//	this.szenario = new Populations (10000, 10000, 1, 1);   	//tragisches Unentschieden
 		JFrame frame = new JFrame("Mathematik und Simulation");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -233,7 +233,7 @@ class LanchesterAnimationPanel extends JPanel {
 	int startGy = 200;
 	int startHx = 850-diameter;
 	int startHy = 200;
-	
+
 	
 	public LanchesterAnimationPanel(ApplicationTime thread, Populations szenario) {
 		this.t = thread;
@@ -443,12 +443,6 @@ class LanchesterAnimationPanel extends JPanel {
 					if (i%2==0) {
 					g.drawString(""+label, (ursprungX+i*(xLength/20))-12, ursprungY+20);
 				}
-				//normal case
-		/*		else {
-				int label = (int)Math.round(scaleTimeLabel*i);
-				g.drawString(""+label, (ursprungX+i*(xLength/20))-6, ursprungY+20);
-				}
-		*/
 				
 			}
 			
@@ -485,7 +479,7 @@ class LanchesterAnimationPanel extends JPanel {
 			}
 			
 		}
-		
+
 		
 		protected void generateGraphDetail (Graphics g, double gStatus, double hStatus) {
 			int ursprungX = 1010;
@@ -529,33 +523,63 @@ class LanchesterAnimationPanel extends JPanel {
 			 */
 			
 			//Calculate the amount of one Step
-			double scaleTimeLabel = 6.0/20.0;
+			double shownTime = 3.0;
+
+			double scaleTimeLabel = shownTime/20.0;
 			double scalePopulationLabel;
 			//calculate the scale of one pixel
-			double scaleTimeDrawing = 6.0/xLength;
+			double scaleTimeDrawing = shownTime/xLength;
 			double scalePopulationDrawing;
 			
-			if (szenario.gStart>szenario.hStart) {
-				scalePopulationLabel = szenario.gStart/20;
-				scalePopulationDrawing = szenario.gStart/yLength;
+			if (time>(2.0/3.0)*shownTime) {
+				if ((szenario.gStatus(time-(2.0/3.0)*shownTime))>(szenario.hStatus(time-(2.0/3.0)*shownTime))) {
+					scalePopulationLabel = (szenario.gStart+szenario.gStart*0.2)/20;
+					scalePopulationDrawing = (szenario.gStart+szenario.gStart*0.2)/yLength;
+					while ((szenario.gStatus(time-(2.0/3.0)*shownTime))<(scalePopulationLabel*3)) {
+					scalePopulationLabel = scalePopulationLabel*(3.0/20.0);
+					scalePopulationDrawing = scalePopulationDrawing*(3.0/20.0);
+					}
+				}
+				else {
+					scalePopulationLabel = (szenario.hStart+szenario.hStart*0.2)/20;
+					scalePopulationDrawing = (szenario.hStart+szenario.hStart*0.2)/yLength;
+					while ((szenario.hStatus(time-(2.0/3.0)*shownTime))<(scalePopulationLabel*3)) {
+					scalePopulationLabel = scalePopulationLabel*(3.0/20.0);
+					scalePopulationDrawing = scalePopulationDrawing*(3.0/20.0);
+					}
+				}
 			}
 			else {
-				scalePopulationLabel = szenario.hStart/20;
-				scalePopulationDrawing = szenario.hStart/yLength;
+				if (gStatus>hStatus) {
+					scalePopulationLabel = (szenario.gStart+szenario.gStart*0.2)/20;
+					scalePopulationDrawing = (szenario.gStart+szenario.gStart*0.2)/yLength;
+				}
+				else {
+					scalePopulationLabel = (szenario.hStart+szenario.hStart*0.2)/20;
+					scalePopulationDrawing = (szenario.hStart+szenario.hStart*0.2)/yLength;
+				}
 			}
 			
 			//Draw the calculated labels
 			//y-axis
-			for (int i = 1; i<21; i++) {
-				int label = (int) Math.round(scalePopulationLabel*i);
-				g.drawString(""+label, ursprungX-60, ursprungY-i*(yLength/20)+5);
+			if (scalePopulationDrawing*yLength>1000) {
+				for (int i = 1; i<21; i++) {
+					int label = (int) Math.round(scalePopulationLabel*i);
+					g.drawString(""+label, ursprungX-60, ursprungY-i*(yLength/20)+5);
+				}
+			}
+			else {
+				for (int i = 1; i<21; i++) {
+					double label = Math.round(scalePopulationLabel*i*100.0)/100.0;
+					g.drawString(""+label, ursprungX-60, ursprungY-i*(yLength/20)+5);
+				}
 			}
 			//x-axis
 			for (int i = 1; i<21; i++) {
 				double label;
 				//If estimated fightTime is smaller than 20
-				if (time>4.0) {
-					label = time-4+scaleTimeLabel*i;
+				if (time>(2.0/3.0)*shownTime) {
+					label = time-((2.0/3.0)*shownTime)+scaleTimeLabel*i;
 				}
 				else {
 					label = scaleTimeLabel*i;
@@ -564,13 +588,7 @@ class LanchesterAnimationPanel extends JPanel {
 					if (i%2==0) {
 					g.drawString(""+label, (ursprungX+i*(xLength/20))-12, ursprungY+20);
 				
-			}
-				//normal case
-		/*		else {
-				int label = (int)Math.round(scaleTimeLabel*i);
-				g.drawString(""+label, (ursprungX+i*(xLength/20))-6, ursprungY+20);
-				}
-		*/
+					}
 				
 			}
 			
@@ -579,14 +597,14 @@ class LanchesterAnimationPanel extends JPanel {
 			 * Draw the functions
 			 */
 			
-			int [] graphGy = new int [xLength];
-			int [] graphHy = new int [xLength];
+			double [] graphGy = new double [xLength];
+			double [] graphHy = new double [xLength];
 			
 			//calculate the values for each x-value of the function
 			for (int i = 0; i<xLength; i++) {
-				if (time<4.0) {
-					graphGy [i] = (int) Math.floor(szenario.gStatus(i*scaleTimeDrawing));
-					graphHy [i] = (int) Math.floor(szenario.hStatus(i*scaleTimeDrawing));
+				if (time<((2.0/3.0)*shownTime)) {
+					graphGy [i] = szenario.gStatus(i*scaleTimeDrawing);
+					graphHy [i] = szenario.hStatus(i*scaleTimeDrawing);
 					if (i<=time/scaleTimeDrawing) {
 						g.setColor(Color.RED);
 						g.fillOval(ursprungX+i-1,(int) (ursprungY-Math.round(graphGy[i]/scalePopulationDrawing)-1), 3, 3);
@@ -604,9 +622,9 @@ class LanchesterAnimationPanel extends JPanel {
 					}
 				}
 				else {
-					graphGy [i] = (int) Math.floor(szenario.gStatus(time-4.0+i*scaleTimeDrawing));
-					graphHy [i] = (int) Math.floor(szenario.hStatus(time-4.0+i*scaleTimeDrawing));
-					if (i<=4.0/scaleTimeDrawing) {
+					graphGy [i] = szenario.gStatus(time-((2.0/3.0)*shownTime)+i*scaleTimeDrawing);
+					graphHy [i] = szenario.hStatus(time-((2.0/3.0)*shownTime)+i*scaleTimeDrawing);
+					if (i<=((2.0/3.0)*shownTime)/scaleTimeDrawing) {
 						g.setColor(Color.RED);
 						g.fillOval(ursprungX+i-1,(int) (ursprungY-Math.round(graphGy[i]/scalePopulationDrawing)-1), 3, 3);
 						g.setColor(Color.BLUE);
@@ -624,9 +642,8 @@ class LanchesterAnimationPanel extends JPanel {
 				}
 			}
 			
-		}
-					
-			
+		} 
+
 } 
 		
 		
